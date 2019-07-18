@@ -1,3 +1,4 @@
+import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -7,7 +8,10 @@ import org.apache.spark.{SparkConf, SparkContext}
   */
 object SecondarySort {
   def main(args: Array[String]): Unit = {
-//    if (args.length !=3){
+    val config = new SparkConf().setAppName("SecondarySort").setMaster("local[10]")
+    val sc = new SparkContext(config)
+
+    //    if (args.length !=3){
 //      println("输入格式错误")
 //      sys.exit(1)
 //    }
@@ -17,10 +21,11 @@ object SecondarySort {
     val partitions = 1
     val inputPath = "G:\\data\\spark\\SeconderSort.txt"
     val outputPath = "G:\\data\\spark\\SeconderSort"
-
-    val config = new SparkConf().setAppName("SecondarySort").setMaster("local[10]")
-    val sc = new SparkContext(config)
-
+    val path: Path = new Path(outputPath)
+    val fs: FileSystem = path.getFileSystem(sc.hadoopConfiguration)
+    if (fs.exists(new Path(outputPath))){
+      fs.delete(new Path(outputPath), true)
+    }
     val input = sc.textFile(inputPath)
 
     val valueToKey = input.map(x =>{
