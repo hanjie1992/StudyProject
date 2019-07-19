@@ -106,7 +106,7 @@ class TopMapper extends Mapper<Object,Text,NullWritable,Text>{
 }
 
 class TopReducer extends Reducer<NullWritable,Text,NullWritable,Text>{
-    private int N = 10;
+    private int N = 2;
     private SortedMap<Double,Text> finaleTop10 = new TreeMap<>();
     @Override
     protected  void setup(Context context){
