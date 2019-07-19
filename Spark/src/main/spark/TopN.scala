@@ -9,6 +9,10 @@ import scala.collection.SortedMap
 
 object TopN {
   def main(args: Array[String]): Unit = {
+//    if (args.size < 1){
+//      println("输入格式不对")
+//      sys.exit(1)
+//    }
     val sparkConf: SparkConf = new SparkConf().setAppName("TopN").setMaster("local[10]")
     val sc = new SparkContext(sparkConf)
 
