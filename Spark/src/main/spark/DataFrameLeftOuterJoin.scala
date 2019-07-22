@@ -63,7 +63,7 @@ object DataFrameLeftOuterJoin {
 
     def transactionRows(line: String):Row ={
       val tokens: Array[String] = line.split(",")
-      Row(tokens(0),tokens(1),tokens(2),tokens(3).toInt,tokens(4).toDouble)
+      Row(tokens(0),tokens(1),tokens(2),tokens(3),tokens(4))
     }
 
     val usersRaw: RDD[String] = sc.textFile(usersInputFile)
@@ -102,8 +102,8 @@ object DataFrameLeftOuterJoin {
     val sqlResult: DataFrame = sql("select productId,count(distinct location) locCount from transactions left join users " +
       "on transactions.userId = users.userId group by productId")
     sqlResult.show()
-//    sqlResult.write.save(output+"/approach2")
-//    sqlResult.rdd.saveAsTextFile(output+"approach2_textFormat")
+    sqlResult.write.save(output+"-approach2")
+    sqlResult.rdd.saveAsTextFile(output+"-approach2_textFormat")
 
     spark.stop()
 
