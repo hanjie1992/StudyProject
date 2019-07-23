@@ -13,7 +13,7 @@ object XiAnSparkPhoneOdData {
     Logger.getLogger("XiAnSparkPhoneOdData").setLevel(Level.WARN)
     val sparkConf :SparkConf = new SparkConf().setMaster("local[10]").setAppName("XiAnSparkPhoneOdData")
     val sc: SparkContext = new SparkContext(sparkConf)
-    val sparkSession :SparkSession = SparkSession.builder().master("local[10]").appName("XiAnSparkPhoneOdDataSql").enableHiveSupport().getOrCreate()
+    val spark :SparkSession = SparkSession.builder().master("local[10]").appName("XiAnSparkPhoneOdDataSql").enableHiveSupport().getOrCreate()
     val icIn: String = "G:\\西安数据\\信令数据\\od\\od_20181210.txt"
     val icOut: String = "G:\\data\\out\\spark"
     val path: Path = new Path(icOut)
@@ -32,8 +32,8 @@ object XiAnSparkPhoneOdData {
     val schemaString = "id,start_time,start_region_name,end_time,end_region_name,travel_time"
     val schema = StructType(schemaString.split(",").map( fieldName => StructField(fieldName,StringType,nullable = true)))
     val rowRdd: RDD[Row] = lineFile.map(line => line.split(",")).map(p=>Row(p(0),p(1),p(2),p(3),p(4),p(5)))
-    val daDataF: DataFrame = sparkSession.createDataFrame(rowRdd,schema)
-    getTravelNameAnalysis(sparkSession,daDataF).show()
+    val daDataF: DataFrame = spark.createDataFrame(rowRdd,schema)
+    getTravelNameAnalysis(spark,daDataF).show()
 //    importDataToMySQL("phone",result)
   }
   def getTravelNameAnalysis(sparkSession: SparkSession,data:DataFrame): DataFrame ={
