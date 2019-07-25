@@ -3,7 +3,6 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
-import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.StringUtils;
 
 import java.io.DataInput;
@@ -53,7 +52,7 @@ public class SortByMRF_MovingAverageDriver {
 
         //定义reduce输出格式
         jobConf.setOutputKeyClass(Text.class);
-        jobConf.setMapOutputValueClass(Text.class);
+        jobConf.setOutputValueClass(Text.class);
 
         //定义输入输出
         FileInputFormat.setInputPaths(jobConf,inputpath);
@@ -87,11 +86,11 @@ class SortByMRF_MovingAverageMapper extends MapReduceBase implements Mapper<Long
 
     @Override
     public void map(LongWritable inkey, Text value, OutputCollector<CompositeKey, TimeSeriesData> output, Reporter reporter) throws IOException {
-//        String record = value.toString();
-//        if ((record == null) || (record.length() == 0)) {
-//            return;
-//        }
-        String[] tokens = StringUtils.split(value.toString(),',');
+        String record = value.toString();
+        if ((record == null) || (record.length() == 0)) {
+            return;
+        }
+        String[] tokens = StringUtils.split(record,',');
         if (tokens.length == 3) {
             // tokens[0] = name
             // tokens[1] = timestamp
