@@ -4,6 +4,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapred.*;
 import org.apache.hadoop.util.StringUtils;
+import util.DateUtil;
 
 import java.io.DataInput;
 import java.io.DataOutput;
