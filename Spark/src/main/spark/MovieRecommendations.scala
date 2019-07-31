@@ -35,17 +35,20 @@ object MovieRecommendations {
 
 
     val numberOfRaterPerMovie: RDD[(String, Int)] = userMovieRating.map(umr => (umr._2,1)).reduceByKey(_+_)
-    numberOfRaterPerMovie.foreach(f => println("numberOfRaterPerMovie= "+f))
+//    numberOfRaterPerMovie.foreach(f => println("numberOfRaterPerMovie= "+f))
 
     val a: RDD[(String, (String, Int))] = userMovieRating.map(umr => (umr._2,(umr._1,umr._3)))
-    a.foreach(f => println("a=== "+f))
+//    a.foreach(f => println("a=== "+f))
     val b: RDD[(String, ((String, Int), Int))] = userMovieRating.map(umr => (umr._2,(umr._1,umr._3))).join(numberOfRaterPerMovie)
-    b.foreach(f => println("b=== "+f))
+//    b.foreach(f => println("b=== "+f))
 
     val userMovieRatingNumberOfRater: RDD[(String, String, Int, Int)] = userMovieRating.map(umr => (umr._2,(umr._1,umr._3))).join(numberOfRaterPerMovie)
         .map(tuple => (tuple._2._1._1,tuple._1,tuple._2._1._2,tuple._2._2))
 
+//    userMovieRatingNumberOfRater.foreach(f => println("userMovieRatingNumberOfRater="+f))
+
     val groupedByUser: RDD[(String, Iterable[(String, Int, Int)])] = userMovieRatingNumberOfRater.map(f => (f._1,(f._2,f._3,f._4))).groupByKey()
+    groupedByUser.foreach(f => println("groupedByUser= "+f))
 
     val moviePairs: RDD[((String, String), (Int, Int, Int, Int, Int, Int, Int))] = groupedByUser.flatMap(tuple => {
       val sorted: List[(String, Int, Int)] = tuple._2.toList.sortBy(f => f._1) //sorted by movies
@@ -61,6 +64,7 @@ object MovieRecommendations {
       }
       tuple7
     })
+    moviePairs.foreach(f => println("moviePairs= "+f))
 
     //groupbykey（）提供了一个昂贵的解决方案,您必须有足够的内存/RAM来保存.给定的键——否则可能会出现OOM错误），但是
     //CombineByKey（）和ReduceByKey（）将提供更好的扩展性能
